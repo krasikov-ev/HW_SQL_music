@@ -79,7 +79,7 @@ JOIN artist a2 ON a2 .artist_id = aa.artist_id
 WHERE a2.artist_name = 'Amy Lynn Lee';
 
 --4.1 Названия альбомов, в которых присутствуют исполнители более чем одного жанра.
-SELECT a.album_name 
+SELECT DISTINCT a.album_name 
 FROM album a 
 JOIN artist_album aa ON aa.album_id = a.album_id
 JOIN artist a2 ON a2.artist_id = aa.artist_id
