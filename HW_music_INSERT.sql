@@ -26,6 +26,19 @@ INSERT INTO track (track_name , duration, album_id) VALUES
 	('The road of sleep', 322, 3),
 	('My Immortal', 302, 1);
 
+INSERT INTO track (track_name , duration, album_id) VALUES
+	('my own', 200 , 4),
+	('own my', 240 , 4),
+	('my', 200 , 4),
+	('oh my god', 200 , 4),
+	('myself', 200 , 4),
+	('by myself', 220 , 4),
+	('bemy self', 200 , 4),
+	('myself by', 210 , 4),
+	('by myself by', 200 , 4),
+	('beemy', 190 , 4),
+	('premyne', 200 , 4);
+
 INSERT INTO collection (collection_name , release_year) VALUES
 	('The best of the best', 2018),
 	('Gold Album', 2020),

@@ -20,9 +20,24 @@ FROM artist
 WHERE artist_name NOT LIKE '% %';
 
 --2.5 Название треков, которые содержат слово «мой» или «my».
+--Вариант 1
 SELECT track_name 
 FROM track 
-WHERE upper(track_name) LIKE '%MY%' OR upper(track_name) LIKE '%МОЙ%';
+WHERE track_name ILIKE '% my %' OR track_name ILIKE '% мой %'
+OR track_name ILIKE 'my %' OR track_name ILIKE 'мой %'
+OR track_name ILIKE '% my' OR track_name ILIKE '% мой'
+OR track_name ILIKE 'my' OR track_name ILIKE 'мой';
+
+--Вариант 2
+SELECT track_name 
+FROM track 
+WHERE string_to_array(lower(track_name), ' ') && ARRAY['my','мой'];
+
+--Вариант 3
+SELECT track_name 
+FROM track 
+WHERE track_name ~* '\mmy\M';
+
 
 --3.1 Количество исполнителей в каждом жанре
 SELECT style_name, COUNT(ars.artist_id)
@@ -43,11 +58,15 @@ JOIN album a ON a.album_id = t.album_id
 GROUP BY a.album_name;
 
 --3.4 Все исполнители, которые не выпустили альбомы в 2020 году.
-SELECT  ar.artist_name, ar.scenic_name
-FROM artist ar
-JOIN artist_album aa ON aa.artist_id = ar.artist_id
-JOIN album al ON al.album_id  = aa.album_id
-WHERE al.release_year <> 2020;
+
+SELECT artist_name, scenic_name
+FROM artist
+WHERE artist_id NOT IN (
+	SELECT ar.artist_id FROM artist ar
+	JOIN artist_album aa ON aa.artist_id = ar.artist_id
+	JOIN album al ON al.album_id  = aa.album_id
+	WHERE al.release_year = 2020
+	);
 
 --3.5 Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами)
 SELECT distinct c.collection_name
@@ -65,7 +84,7 @@ FROM album a
 JOIN artist_album aa ON aa.album_id = a.album_id
 JOIN artist a2 ON a2.artist_id = aa.artist_id
 JOIN artist_style ars ON ars.artist_id = a2.artist_id
-GROUP BY a.album_name
+GROUP BY a.album_name, ars.artist_id 
 HAVING count(ars.style_id) > 1;
 
 --4.2 Наименования треков, которые не входят в сборники.
@@ -88,10 +107,4 @@ GROUP BY album_name
 HAVING count (*) = (SELECT count(*) AS qty FROM track GROUP BY album_id ORDER BY qty LIMIT 1);
 
  
-
-
-
-
-
-
 
